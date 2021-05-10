@@ -24,6 +24,9 @@ jobs:
           echo "The name of the pusher: ${{ github.event.head_commit.author.name }}"
           echo "The email of the pusher: ${{ github.event.head_commit.author.email }}"
 
+      - name: Set SKIP if this is a newly-created release branch
+        run: echo "${{ github.event.created }}"
+
       - name: checkout develop branch
         uses: actions/checkout@v2
         with:
@@ -53,4 +56,5 @@ jobs:
           body: 'Merge ${{ github.event.ref }} into develop'
           reviewers: |
             ${{ github.event.head_commit.author.username }}
-            application-infrastructure
+          team-reviewers: |
+            Appboy/application-infrastructure
