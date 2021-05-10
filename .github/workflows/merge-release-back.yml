@@ -73,7 +73,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          base: develop
           branch: 'merge-release-${{ github.event.after }}'
           title: 'Merge ${{ env.short_ref }}'
           body: 'Merge ${{ env.short_ref }} into develop'
