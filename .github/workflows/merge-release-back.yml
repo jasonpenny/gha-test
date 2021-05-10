@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # this job should only run for things added after the branch is initially created
-    if: ${{ github.event.created == '"false"' }}
+    if: "contains(github.event.created, 'false')"
 
     steps:
       - name: View the github context
