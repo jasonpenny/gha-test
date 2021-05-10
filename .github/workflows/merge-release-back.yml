@@ -61,6 +61,11 @@ jobs:
         with:
           branch: 'merge-release-${{ github.event.after }}'
 
+      - name: checkout new branch
+        uses: actions/checkout@v2
+        with:
+          ref: 'merge-release-${{ github.event.after }}'
+
       - name: Create Pull Request
         if: ${{ env.merge_failed == 'true' }}
         uses: peter-evans/create-pull-request@v3
