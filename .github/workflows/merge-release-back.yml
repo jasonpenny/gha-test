@@ -19,6 +19,9 @@ jobs:
           echo "The name of the pusher: ${{ github.event.head_commit.author.name }}"
           echo "The email of the pusher: ${{ github.event.head_commit.author.email }}"
 
+      - name: checkout HEAD
+        uses: actions/checkout@v2
+
       - name: checkout develop branch
         uses: actions/checkout@v2
         with:
