@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # this job should only run for things added after the branch is initially created
+    if: "!contains(github.event.created, 'true')"
+
     steps:
       - name: View the github context
         run: echo "$GITHUB_CONTEXT"
@@ -24,9 +27,8 @@ jobs:
           echo "The name of the pusher: ${{ github.event.head_commit.author.name }}"
           echo "The email of the pusher: ${{ github.event.head_commit.author.email }}"
 
-      - name: Set env vars
+      - name: Set short_ref env var
         run: |
-          echo "${{ github.event.created }}"
           SHORT_REF="${{ github.event.ref }}"
           echo "short_ref=${SHORT_REF/refs\/heads\//}" >> $GITHUB_ENV
 
