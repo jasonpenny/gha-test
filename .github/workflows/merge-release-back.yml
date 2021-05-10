@@ -11,6 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # this job should only run for things added after the branch is initially created
+    # so skip all steps if the branch created=true
     if: "contains(github.event.created, 'false')"
 
     steps:
@@ -19,12 +20,12 @@ jobs:
           SHORT_REF="${{ github.event.ref }}"
           echo "short_ref=${SHORT_REF/refs\/heads\//}" >> $GITHUB_ENV
 
-      - name: checkout develop branch
+      - name: Checkout develop branch
         uses: actions/checkout@v2
         with:
           ref: 'develop'
 
-      - name: merge the release branch commit
+      - name: Attempt to merge the release branch commit and push to develop
         run: |
           git fetch --unshallow origin develop "${{ github.event.ref }}"
           git config user.name "${{ github.event.head_commit.author.name }}"
@@ -38,30 +39,30 @@ jobs:
             echo "merge_failed=true" >> $GITHUB_ENV
           fi
 
-      - name: checkout ref
+      - name: Checkout the ref instead of develop
         if: ${{ env.merge_failed == 'true' }}
         uses: actions/checkout@v2
 
-      - name: create new branch
+      - name: Create a new branch for the pull request
         if: ${{ env.merge_failed == 'true' }}
         uses: peterjgrainger/action-create-branch@v2.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          branch: 'merge-release-${{ github.event.after }}'
+          branch: 'merge-${{ env.short_ref }}-${{ github.event.after }}'
 
-      - name: checkout new branch
+      - name: Checkout the new branch
         if: ${{ env.merge_failed == 'true' }}
         uses: actions/checkout@v2
         with:
-          ref: 'merge-release-${{ github.event.after }}'
+          branch: 'merge-${{ env.short_ref }}-${{ github.event.after }}'
 
       - name: Create Pull Request
         if: ${{ env.merge_failed == 'true' }}
         uses: repo-sync/pull-request@v2
         with:
           destination_branch: develop
-          source_branch: 'merge-release-${{ github.event.after }}'
+          source_branch: 'merge-${{ env.short_ref }}-${{ github.event.after }}'
           pr_title: 'Merge ${{ env.short_ref }}'
           pr_body: 'Merge ${{ env.short_ref }} into develop'
           pr_reviewer: '${{ github.event.head_commit.author.username }},Appboy/application-infrastructure'
