@@ -10,9 +10,11 @@ jobs:
     steps:
       - name: View the information
         run: |
-          echo "commit ${{ github.event.push.after }}"
-          echo "The name of the pusher: ${{ github.event.pusher.name }}"
-          echo "The email of the pusher: ${{ github.event.pusher.email }}"
+          echo "commit ${{ github.event.after }}"
+          echo "actor ${{ github.event.actor }}"
+          echo "The username of the pusher: ${{ github.event.head_commit.author.username }}"
+          echo "The name of the pusher: ${{ github.event.head_commit.author.name }}"
+          echo "The email of the pusher: ${{ github.event.head_commit.author.email }}"
 
       - name: View the github context
         run: echo "$GITHUB_CONTEXT"
