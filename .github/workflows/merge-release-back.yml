@@ -21,7 +21,8 @@ jobs:
 
       - name: checkout develop branch
         uses: actions/checkout@v2
-        ref: 'develop'
+        with:
+          ref: 'develop'
 
       - name: merge the release branch commit
         run: 'git merge ${{ github.event.after }}'
