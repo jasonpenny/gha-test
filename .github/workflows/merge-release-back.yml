@@ -42,14 +42,16 @@ jobs:
           git fetch --unshallow origin develop "${{ github.event.ref }}"
           git config user.name "${{ github.event.head_commit.author.name }}"
           git config user.email "${{ github.event.head_commit.author.email }}"
-          set -x
+
           set +e
-          if git merge "origin/${{ env.short_ref }}" &&
-            git push origin develop ; then
+          if git merge "origin/${{ env.short_ref }}" && git push origin develop ; then
             echo "merge_failed=" >> $GITHUB_ENV
           else
             echo "merge_failed=true" >> $GITHUB_ENV
           fi
+
+      - name: checkout ref
+        uses: actions/checkout@v2
 
       - name: create new branch
         if: ${{ env.merge_failed == 'true' }}
