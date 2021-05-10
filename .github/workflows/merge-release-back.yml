@@ -28,7 +28,7 @@ jobs:
         run: |
           echo "${{ github.event.created }}"
           SHORT_REF="${{ github.event.ref }}"
-          SHORT_REF=${SHORT_REF/refs\/heads\//}
+          echo "::set-env name=SHORT_REF::${SHORT_REF/refs\/heads\//}"
 
       - name: checkout develop branch
         uses: actions/checkout@v2
