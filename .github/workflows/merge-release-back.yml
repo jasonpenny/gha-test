@@ -1,3 +1,6 @@
+# When a new push happens to a release-N branch,
+# create a pull request merging the latest commit back to the `develop` branch.
+
 ---
 
 on:
@@ -16,7 +19,16 @@ jobs:
           echo "The name of the pusher: ${{ github.event.head_commit.author.name }}"
           echo "The email of the pusher: ${{ github.event.head_commit.author.email }}"
 
-      - name: View the github context
-        run: echo "$GITHUB_CONTEXT"
+      - name: checkout develop branch
+        uses: actions/checkout@v2
+        ref: 'develop'
+
+      - name: merge the release branch commit
+        run: 'git merge ${{ github.event.after }}'
+
+      - name: create new branch
+        uses: peterjgrainger/action-create-branch@v2.0.1
         env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: 'merge-release-${{ github.event.after }}'
