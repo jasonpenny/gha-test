@@ -1,0 +1,20 @@
+---
+
+on:
+  push:
+    branches: ['release-[0-9]+']
+
+jobs:
+  builld:
+    runs-on: ubuntu-latest
+    steps:
+      - name: View the information
+        run: |
+          echo "commit ${{ github.event.push.after }}"
+          echo "The name of the pusher: ${{ github.event.pusher.name }}"
+          echo "The email of the pusher: ${{ github.event.pusher.email }}"
+
+      - name: View the github context
+        run: echo "$GITHUB_CONTEXT"
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
