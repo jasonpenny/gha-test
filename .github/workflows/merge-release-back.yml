@@ -39,7 +39,7 @@ jobs:
 
       - name: merge the release branch commit
         run: |
-          git fetch origin develop "${{ github.event.ref }}"
+          git fetch --unshallow origin develop "${{ github.event.ref }}"
           git config user.name "${{ github.event.head_commit.author.name }}"
           git config user.email "${{ github.event.head_commit.author.email }}"
           set -x
