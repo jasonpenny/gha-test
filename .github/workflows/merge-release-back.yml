@@ -53,13 +53,13 @@ jobs:
       - name: checkout ref
         uses: actions/checkout@v2
 
-      # - name: create new branch
-      #   if: ${{ env.merge_failed == 'true' }}
-      #   uses: peterjgrainger/action-create-branch@v2.0.1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     branch: 'merge-release-${{ github.event.after }}'
+      - name: create new branch
+        if: ${{ env.merge_failed == 'true' }}
+        uses: peterjgrainger/action-create-branch@v2.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: 'merge-release-${{ github.event.after }}'
 
       - name: Create Pull Request
         if: ${{ env.merge_failed == 'true' }}
@@ -67,6 +67,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          base: develop
           branch: 'merge-release-${{ github.event.after }}'
           title: 'Merge ${{ env.short_ref }}'
           body: 'Merge ${{ env.short_ref }} into develop'
