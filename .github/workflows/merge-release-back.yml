@@ -8,9 +8,14 @@ on:
     branches: ['release-[0-9]+']
 
 jobs:
-  builld:
+  build:
     runs-on: ubuntu-latest
     steps:
+      - name: View the github context
+        run: echo "$GITHUB_CONTEXT"
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+
       - name: View the information
         run: |
           echo "commit ${{ github.event.after }}"
@@ -27,6 +32,8 @@ jobs:
       - name: merge the release branch commit
         run: |
           git fetch origin develop "${{ github.event.ref }}"
+          git config user.name "${{ github.event.head_commit.author.name }}"
+          git config user.email "${{ github.event.head_commit.author.email }}"
           git merge "${{ github.event.after }}"
 
       - name: create new branch
@@ -35,3 +42,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           branch: 'merge-release-${{ github.event.after }}'
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: 'merge-release-${{ github.event.after }}'
+          title: 'Merge ${{ github.event.ref }}'
+          body: 'Merge ${{ github.event.ref }} into develop'
+          reviewers: |
+            ${{ github.event.head_commit.author.username }}
+            application-infrastructure
