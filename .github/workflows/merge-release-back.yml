@@ -47,6 +47,7 @@ jobs:
           if git merge "origin/${{ env.short_ref }}" && git push origin develop ; then
             echo "merge_failed=" >> $GITHUB_ENV
           else
+            git reset --hard
             echo "merge_failed=true" >> $GITHUB_ENV
           fi
 
