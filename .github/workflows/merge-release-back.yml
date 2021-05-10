@@ -43,7 +43,7 @@ jobs:
           git config user.name "${{ github.event.head_commit.author.name }}"
           git config user.email "${{ github.event.head_commit.author.email }}"
           set -x
-          git merge "${{ github.event.ref }}"
+          git merge "${{ env.short_ref }}"
 
       - name: create new branch
         uses: peterjgrainger/action-create-branch@v2.0.1
