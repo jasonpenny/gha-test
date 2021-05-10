@@ -24,8 +24,11 @@ jobs:
           echo "The name of the pusher: ${{ github.event.head_commit.author.name }}"
           echo "The email of the pusher: ${{ github.event.head_commit.author.email }}"
 
-      - name: Set SKIP if this is a newly-created release branch
-        run: echo "${{ github.event.created }}"
+      - name: Set env vars
+        run: |
+          echo "${{ github.event.created }}"
+          SHORT_REF="${{ github.event.ref }}"
+          SHORT_REF=${SHORT_REF/refs\/heads\//}
 
       - name: checkout develop branch
         uses: actions/checkout@v2
@@ -52,8 +55,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           branch: 'merge-release-${{ github.event.after }}'
-          title: 'Merge ${{ github.event.ref }}'
-          body: 'Merge ${{ github.event.ref }} into develop'
+          title: 'Merge ${SHORT_REF}'
+          body: 'Merge ${SHORT_REF} into develop'
           reviewers: |
             ${{ github.event.head_commit.author.username }}
           team-reviewers: |
