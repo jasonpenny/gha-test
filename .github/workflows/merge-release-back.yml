@@ -14,19 +14,6 @@ jobs:
     if: "contains(github.event.created, 'false')"
 
     steps:
-      - name: View the github context
-        run: echo "$GITHUB_CONTEXT"
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-
-      - name: View the information
-        run: |
-          echo "commit ${{ github.event.after }}"
-          echo "actor ${{ github.actor }}"
-          echo "The username of the pusher: ${{ github.event.head_commit.author.username }}"
-          echo "The name of the pusher: ${{ github.event.head_commit.author.name }}"
-          echo "The email of the pusher: ${{ github.event.head_commit.author.email }}"
-
       - name: Set short_ref env var
         run: |
           SHORT_REF="${{ github.event.ref }}"
@@ -52,6 +39,7 @@ jobs:
           fi
 
       - name: checkout ref
+        if: ${{ env.merge_failed == 'true' }}
         uses: actions/checkout@v2
 
       - name: create new branch
@@ -63,6 +51,7 @@ jobs:
           branch: 'merge-release-${{ github.event.after }}'
 
       - name: checkout new branch
+        if: ${{ env.merge_failed == 'true' }}
         uses: actions/checkout@v2
         with:
           ref: 'merge-release-${{ github.event.after }}'
@@ -73,6 +62,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          base: develop
           branch: 'merge-release-${{ github.event.after }}'
           title: 'Merge ${{ env.short_ref }}'
           body: 'Merge ${{ env.short_ref }} into develop'
