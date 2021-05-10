@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # this job should only run for things added after the branch is initially created
-    if: "contains(github.event.created, 'false')"
+    if: ${{ github.event.created == 'false' }}
 
     steps:
       - name: View the github context
@@ -42,7 +42,8 @@ jobs:
           git fetch origin develop "${{ github.event.ref }}"
           git config user.name "${{ github.event.head_commit.author.name }}"
           git config user.email "${{ github.event.head_commit.author.email }}"
-          git merge "${{ github.event.after }}"
+          set -x
+          git merge "${{ github.event.ref }}"
 
       - name: create new branch
         uses: peterjgrainger/action-create-branch@v2.0.1
