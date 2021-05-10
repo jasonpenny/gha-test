@@ -43,9 +43,15 @@ jobs:
           git config user.name "${{ github.event.head_commit.author.name }}"
           git config user.email "${{ github.event.head_commit.author.email }}"
           set -x
-          git merge "origin/${{ env.short_ref }}"
+          if git merge "origin/${{ env.short_ref }}" &&
+            git push origin develop ; then
+            echo "merge_failed=" >> $GITHUB_ENV
+          else
+            echo "merge_failed=true" >> $GITHUB_ENV
+          fi
 
       - name: create new branch
+        if: ${{ env.merge_failed == 'true' }}
         uses: peterjgrainger/action-create-branch@v2.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -53,6 +59,7 @@ jobs:
           branch: 'merge-release-${{ github.event.after }}'
 
       - name: Create Pull Request
+        if: ${{ env.merge_failed == 'true' }}
         uses: peter-evans/create-pull-request@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
