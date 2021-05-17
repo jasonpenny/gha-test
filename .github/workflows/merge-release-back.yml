@@ -41,7 +41,7 @@ jobs:
 
             * Resolve merge conflicts, if any exist
             * After the tests pass, approve this PR
-            * Make sure the merge selector says `Create a merge commit`
+            * Make sure the merge selector says \`Create a merge commit\`
             * Merge
 
             See https://confluence.braze.com/display/ENG/Hotfix+Release+Process for further details
