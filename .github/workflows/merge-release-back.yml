@@ -36,7 +36,15 @@ jobs:
           destination_branch: develop
           source_branch: 'merge-${{ env.short_ref }}-${{ github.event.after }}'
           pr_title: 'Merge ${{ env.short_ref }}'
-          pr_body: 'Merge ${{ env.short_ref }} into develop'
+          pr_body: |
+            @${{ github.event.head_commit.author.username }}, you are responsible for merging your recent hotfix back to develop:
+
+            * Resolve merge conflicts, if any exist
+            * After the tests pass, approve this PR
+            * Make sure the merge selector says \`Create a merge commit\`
+            * Merge
+
+            See https://confluence.braze.com/display/ENG/Hotfix+Release+Process for further details
           pr_reviewer: '${{ github.event.head_commit.author.username }},Appboy/application-infrastructure'
           pr_label: 'hotfix-merge-to-develop'
           github_token: ${{ secrets.GITHUB_TOKEN }}
