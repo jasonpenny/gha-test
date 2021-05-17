@@ -20,8 +20,8 @@ jobs:
           SHORT_REF="${{ github.event.ref }}"
           echo "short_ref=${SHORT_REF/refs\/heads\//}" >> $GITHUB_ENV
 
-      #- name: Checkout
-      #  uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Create a new branch for the pull request
         uses: peterjgrainger/action-create-branch@v2.0.1
