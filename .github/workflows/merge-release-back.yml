@@ -19,8 +19,10 @@ jobs:
         run: |
           SHORT_REF="${{ github.event.ref }}"
           SHORT_SHA=$(echo "${{ github.event.after }}" | cut -c 1-12)
+          HEAD_COMMIT_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | sed "s/\"/“/g")
           echo "short_ref=${SHORT_REF/refs\/heads\//}" >> $GITHUB_ENV
           echo "short_sha=${SHORT_SHA}" >> $GITHUB_ENV
+          echo "head_commit_message=${HEAD_COMMIT_MESSAGE}" >> $GITHUB_ENV
 
       - name: Checkout develop branch
         uses: actions/checkout@v2
@@ -69,7 +71,7 @@ jobs:
           pr_body: |
             @${{ github.event.head_commit.author.username }}, you are responsible for merging your recent hotfix back to develop:
 
-            Will merge ${{ env.short_sha }}: ${{ github.event.head_commit.message }}
+            Will merge ${{ env.short_sha }}: ${{ env.head_commit_message }}
 
             * Resolve merge conflicts, if any exist
             * After the tests pass, approve this PR
