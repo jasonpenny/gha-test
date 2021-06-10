@@ -19,10 +19,11 @@ jobs:
         run: |
           SHORT_REF="${{ github.event.ref }}"
           SHORT_SHA=$(echo "${{ github.event.after }}" | cut -c 1-12)
-          HEAD_COMMIT_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | sed "s/\"/“/g")
           echo "short_ref=${SHORT_REF/refs\/heads\//}" >> $GITHUB_ENV
           echo "short_sha=${SHORT_SHA}" >> $GITHUB_ENV
-          echo "head_commit_message=${HEAD_COMMIT_MESSAGE}" >> $GITHUB_ENV
+          echo "head_commit_message=${HEAD_COMMIT_MESSAGE//\"/“}" >> $GITHUB_ENV
+        env:
+          HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 
       - name: Checkout
         uses: actions/checkout@v2
