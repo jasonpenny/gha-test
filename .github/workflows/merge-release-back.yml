@@ -36,6 +36,7 @@ jobs:
           branch: 'merge-${{ env.short_ref }}-${{ github.event.after }}'
 
       - name: Create Pull Request
+        id: create-pr
         uses: repo-sync/pull-request@v2
         with:
           destination_branch: develop
@@ -55,3 +56,16 @@ jobs:
           pr_reviewer: '${{ github.event.head_commit.author.username }},Appboy/application-infrastructure'
           pr_label: 'hotfix-merge-to-develop'
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+
+      - name: Get Pull Request ID
+        run: |
+          NEW_ID=$(.github/workflows/scripts/get_pull_request_id.rb "${{ steps.create-pr.outputs.pr_number")
+          echo "new_pr_id=${NEW_ID}" >> $GITHUB_ENV
+
+      - name: Mark Pull Request as Auto-Merge
+        run: echo ${{ env.new_pr_id }}
