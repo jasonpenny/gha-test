@@ -68,3 +68,5 @@ jobs:
 
       - name: Mark Pull Request as Auto-Merge
         run: ruby .github/workflows/scripts/enable_auto_merge.rb "${{ steps.create-pr.outputs.pr_number }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
