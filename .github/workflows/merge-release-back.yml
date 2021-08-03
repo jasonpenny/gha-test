@@ -21,7 +21,10 @@ jobs:
           SHORT_SHA=$(echo "${{ github.event.after }}" | cut -c 1-12)
           echo "short_ref=${SHORT_REF/refs\/heads\//}" >> $GITHUB_ENV
           echo "short_sha=${SHORT_SHA}" >> $GITHUB_ENV
-          echo "head_commit_message=${HEAD_COMMIT_MESSAGE//\"/“}" >> $GITHUB_ENV
+          echo "head_commit_message<<EOF" >> $GITHUB_ENV
+          echo "${HEAD_COMMIT_MESSAGE//[\"\`]/“}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
         env:
           HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 
