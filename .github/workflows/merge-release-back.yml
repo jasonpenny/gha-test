@@ -64,6 +64,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
+          bundler: none
 
       - name: Mark Pull Request as Auto-Merge
-        run: .github/workflows/scripts/enable_auto_merge.rb "${{ steps.create-pr.outputs.pr_number }}"
+        run: ruby .github/workflows/scripts/enable_auto_merge.rb "${{ steps.create-pr.outputs.pr_number }}"
