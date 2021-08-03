@@ -62,10 +62,6 @@ jobs:
         with:
           ruby-version: 2.7
 
-      - name: Get Pull Request ID
-        run: |
-          NEW_ID=$(.github/workflows/scripts/get_pull_request_id.rb "${{ steps.create-pr.outputs.pr_number")
-          echo "new_pr_id=${NEW_ID}" >> $GITHUB_ENV
-
       - name: Mark Pull Request as Auto-Merge
-        run: echo ${{ env.new_pr_id }}
+        run: |
+          .github/workflows/scripts/enable_auto_merge.rb "${{ steps.create-pr.outputs.pr_number"
