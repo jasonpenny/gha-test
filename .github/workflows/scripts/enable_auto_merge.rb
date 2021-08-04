@@ -71,4 +71,7 @@ end
 pr_id = get_pr_id_for_number(ARGV[0])
 
 result = enable_pull_request_auto_merge(pr_id)
-puts result
+if !result["errors"].nil?
+  puts result
+  exit(1)
+end
