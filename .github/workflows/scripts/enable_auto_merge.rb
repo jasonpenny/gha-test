@@ -5,17 +5,17 @@
 # Outputs a pullRequestId for use in GitHub graphql API mutations
 # requires $GITHUB_TOKEN env var and a single argument of the PR number.
 
-require 'net/http'
-require 'uri'
-require 'json'
+require "net/http"
+require "uri"
+require "json"
 
 def request(body_obj)
-  github_uri = URI('https://api.github.com/graphql')
+  github_uri = URI("https://api.github.com/graphql")
 
   req = Net::HTTP::Post.new(
     github_uri,
-    'Content-Type' => 'application/json',
-    'Authorization' => "Bearer #{ENV['GITHUB_TOKEN']}"
+    "Content-Type" => "application/json",
+    "Authorization" => "Bearer #{ENV['GITHUB_TOKEN']}"
   )
   req.body = body_obj.to_json
 
@@ -42,7 +42,7 @@ def get_pr_id_for_number(pr_number)
       }
     }
   GRAPHQL
-  return query_request(query)['data']['repository']['pullRequest']['id']
+  return query_request(query)["data"]["repository"]["pullRequest"]["id"]
 end
 
 def enable_pull_request_auto_merge(pr_id)
@@ -58,8 +58,8 @@ def enable_pull_request_auto_merge(pr_id)
   return mutation_request(mutation, { input: { pullRequestId: pr_id } })
 end
 
-if ENV['GITHUB_TOKEN'].nil?
-  puts '$GITHUB_TOKEN env var must be set'
+if ENV["GITHUB_TOKEN"].nil?
+  puts "$GITHUB_TOKEN env var must be set"
   exit(1)
 end
 
@@ -71,7 +71,9 @@ end
 pr_id = get_pr_id_for_number(ARGV[0])
 
 result = enable_pull_request_auto_merge(pr_id)
-if !result["errors"].nil?
+if result["errors"].nil?
+  puts "Enabled auto-merge"
+else
   puts result
   exit(1)
 end
