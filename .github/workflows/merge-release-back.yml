@@ -28,7 +28,7 @@ jobs:
           HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 
       - name: Checkout develop branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: 'develop'
 
@@ -48,7 +48,7 @@ jobs:
 
       - name: Checkout the ref instead of develop
         if: ${{ env.merge_failed == 'true' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Create a new branch for the pull request
         if: ${{ env.merge_failed == 'true' }}
@@ -60,7 +60,7 @@ jobs:
 
       - name: Checkout the new branch
         if: ${{ env.merge_failed == 'true' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           branch: 'merge-${{ env.short_ref }}-${{ github.event.after }}'
 
